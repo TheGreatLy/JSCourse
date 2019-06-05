@@ -17,12 +17,20 @@
     <body>
         <div id="wrap">
             <h3>TodoList</h3>
+
             <ul class="nav">
                 <li class="hot">全部</li>
                 <li>完成</li>
                 <li>未完</li>
                 <div class="box"></div>
             </ul>
+            <button>添加任务</button>
+            <div class="add">
+                <input type="text" placeholder="任务名称">
+                <input type="text" placeholder="任务时间">
+                <input type="button" value="确定" >
+                <del class="close">关闭</del>
+            </div>
             <div class="main">
                 <ul class="con">
                 </ul>
@@ -37,16 +45,19 @@
         <script>
 
             window.onload = function () {
-                //全部事件数组
-                let allarr = [
-                    {id:0,value:"css+div布局",ctime:"2019-06-04",status:true},
-                    {id:1,value:"js基础",ctime:"2019-06-05",status:false},
-                    {id:2,value:"js函数",ctime:"2019-06-09",status:false},
-                    {id:3,value:"箭头函数",ctime:"2019-06-08",status:false},
-                    {id:4,value:"BOM",ctime:"2019-06-06",status:false},
-                    {id:5,value:"DOM",ctime:"2019-06-03",status:true}
-                ];
 
+                console.log(JSON.parse(localStorage.getItem("all")));
+                //全部事件数组
+                let allarr = JSON.parse(localStorage.getItem("all")) || [
+                        {id: 0, value: "css+div布局", ctime: "2019-06-04", status: true},
+                        {id: 1, value: "js基础", ctime: "2019-06-05", status: false},
+                        {id: 2, value: "js函数", ctime: "2019-06-09", status: false},
+                        {id: 3, value: "箭头函数", ctime: "2019-06-08", status: false},
+                        {id: 4, value: "BOM", ctime: "2019-06-06", status: false},
+                        {id: 5, value: "DOM", ctime: "2019-06-03", status: true}
+                    ];
+
+                // localStorage.setItem("all",JSON.stringify(allarr));
                 //已完成数组和未完成数组
                 let done,doing;
 
@@ -119,6 +130,7 @@
                             //重新渲染页面
                             init();
                         }
+                        localStorage.setItem("all",JSON.stringify(allarr));
                     };
                 });
 
@@ -130,6 +142,60 @@
                         main.style.transform = `translate(${-1*index*33.333}%,0)`;
                     }
                 })
+
+                //添加任务
+                let btn = document.querySelector("button"),
+                    addbox = document.querySelector(".add"),
+                    aText = document.querySelectorAll(".add>input[type=text]"),
+                    sub = document.querySelector(".add>input[type=button]"),
+                    close = document.querySelector(".close");
+
+                btn.onclick = ()=>{
+
+                    addbox.style.display = "block";
+
+                }
+
+                function submit(){
+                    let name = aText[0].value,
+                        date = aText[1].value;
+
+                    if (!name||!date){
+                        alert('不能为空')
+                    } else{
+                        let lastid = allarr[allarr.length-1].id;
+                        allarr.push({
+                            id:lastid+1,
+                            value:name,
+                            ctime:date,
+                            status:false
+                        })
+                        filterData();
+                        init();
+                        aText[0].value = "";
+                        aText[1].value = "";
+                        aText[0].focus();
+                        localStorage.setItem("all",JSON.stringify(allarr));
+                    }
+                }
+                sub.onclick = ()=>{
+
+                    submit();
+
+                }
+                aText.forEach(ele=>{
+                    ele.onkeydown = function (e) {
+                        // console.log(e);
+                        if (e.which === 13){
+                            submit();
+                        }
+                    }
+                })
+                close.onclick = ()=>{
+
+                    addbox.style.display = "none";
+
+                }
 
             }
 

@@ -71,3 +71,41 @@ del{
     margin-right: 10px;
     color: red;
 }
+
+button{
+    width:100px;
+    height:35px;
+    background-color: #2ed977;
+    color: #fff;
+    border: none;
+    margin: 20px 0 0;
+    transition: 0.5s;
+    cursor: pointer;
+}
+button:hover{
+    box-shadow: 2px 2px 5px #000;
+}
+.add{
+    display: none;
+    margin: 20px 0;
+    line-height: 39px;
+    /*vertical-align: middle;*/
+}
+.add>input[type=text]{
+    text-indent: 10px;
+    padding: 0;
+    display: inline-block;
+    width:300px;
+    height:35px;
+    outline: none;
+    border-radius: 5px;
+}
+.add>input[type=button]{
+    width:100px;
+    height:39px;
+    background-color: #4ebbfe;
+    color: #fff;
+    border:none;
+    vertical-align: bottom;
+    border-radius: 5px;
+}
