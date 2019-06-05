@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <meta name="keywords" content="关键词">
+        <meta name="description" content="描述">
+        <meta name="author" content="LY">
+        <style>
+            body{font-family: "Microsoft YaHei",serif;}
+            body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+            ol,ul,li{margin:0;padding:0;list-style:none;}
+            img{border:none;}
+        </style>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+    <body>
+        <div id="wrap">
+            <h3>TodoList</h3>
+            <ul class="nav">
+                <li class="hot">全部</li>
+                <li>完成</li>
+                <li>未完</li>
+                <div class="box"></div>
+            </ul>
+            <div class="main">
+                <ul class="con">
+                </ul>
+                <ul class="con">
+
+                </ul>
+                <ul class="con">
+                </ul>
+            </div>
+        </div>
+        
+        <script>
+
+            window.onload = function () {
+                //全部事件数组
+                let allarr = [
+                    {id:0,value:"css+div布局",ctime:"2019-06-04",status:true},
+                    {id:1,value:"js基础",ctime:"2019-06-05",status:false},
+                    {id:2,value:"js函数",ctime:"2019-06-09",status:false},
+                    {id:3,value:"箭头函数",ctime:"2019-06-08",status:false},
+                    {id:4,value:"BOM",ctime:"2019-06-06",status:false},
+                    {id:5,value:"DOM",ctime:"2019-06-03",status:true}
+                ];
+
+                //已完成数组和未完成数组
+                let done,doing;
+
+                //筛选出已完成和未完成数组
+                function filterData(){
+                    done = allarr.filter(ele=>ele.status);
+                    doing = allarr.filter(ele=>ele.status === false);
+                }
+
+                //渲染列表函数
+                function render(dom,arr){
+
+                    let html = ``;
+                    if (arr.length === 0){
+                        dom.innerHTML = "";
+                        return;
+                    }
+                    arr.forEach((ele,index)=>{
+
+                        if(ele.status){
+                            html += `
+                                <li class="${ele.id}">
+                                    <input type="checkbox" checked="checked">${ele.value} <del>X</del> <time>${ele.ctime}</time>
+                                </li>
+                            `;
+                        }else{
+                            html += `
+                                <li class="${ele.id}">
+                                    <input type="checkbox">${ele.value} <del>X</del> <time>${ele.ctime}</time>
+                                </li>
+                            `;
+                        }
+
+                        dom.innerHTML = html;
+                    })
+
+                }
+
+                //获取DOM元素
+                let aLi = document.querySelectorAll(".nav>li"),
+                    main = document.querySelector(".main"),
+                    aCon = document.querySelectorAll(".con");
+
+                //初始化函数
+                function init(){
+                    render(aCon[0],allarr);
+                    render(aCon[1],done);
+                    render(aCon[2],doing);
+                }
+
+                filterData();
+                init();
+
+
+                //点击页面中的input和删除键的事件
+                aCon.forEach((elem, index) => {
+                    elem.onclick = function(e){
+                        var e = e || window.event;
+                        var target = e.target || e.srcElement;
+                        let id = parseInt(target.parentNode.className);
+                        let index = allarr.findIndex(ele=>ele.id === id);
+                        if (target.nodeName === "INPUT"){
+                            allarr[index].status = !allarr[index].status;
+                            filterData();//重新筛选数据
+                            //重新渲染页面
+                            init()
+                        }else if (target.nodeName === "DEL") {
+                            allarr.splice(index,1);//从数组中删除这一项
+                            filterData();//重新筛选数据
+                            //重新渲染页面
+                            init();
+                        }
+                    };
+                });
+
+                //导航栏点击事件
+                [...aLi].forEach((ele,index)=>{
+                    ele.onclick = function () {
+                        [...aLi].forEach(elem=>elem.classList.remove("hot"));
+                        ele.classList.add("hot");
+                        main.style.transform = `translate(${-1*index*33.333}%,0)`;
+                    }
+                })
+
+            }
+
+        </script>
+    </body>
+</html>
