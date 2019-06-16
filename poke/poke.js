@@ -1,0 +1,156 @@
+
+$(function () {
+    let poke = [];
+    let flag = {};
+    let colorArr = ["s","h","d","c"];
+
+    for ( let i = 0;i < 52;i++ ){
+
+        let index = Math.floor(Math.random()*colorArr.length);
+        let color = colorArr[index];
+        let num = Math.floor(Math.random()*13+1);
+
+        while ( flag[color+num] ){
+            index = Math.floor(Math.random()*colorArr.length);
+            color = colorArr[index];
+            num = Math.floor(Math.random()*13+1);
+        }
+
+        poke.push({color,num});
+        flag[color+num] = true;
+
+    }
+    console.log(poke);
+
+
+    for ( let i = 51;i>=0;i-- ){
+        let obj = poke[i];
+        $("<div>").addClass("poke")
+            .data("num",obj.num)
+            .attr("draggable",true)
+            .css({backgroundImage:`url(./imgs/${obj.num}${obj.color}.jpg)`})
+            .appendTo("#wrap");
+    }
+
+    let aPoke = $('.poke');
+    //发牌
+    function dispath() {
+        let index = 52;
+        let de = 30;
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j <= i; j++) {
+                index--;
+                let obj = poke[index];
+                // console.log(obj);
+                let left = 550 - 50 * i + 100 * j,
+                    top = 70 * i;
+                aPoke.eq(index).attr('id', i + '_' + j)
+                    .delay(50 * (52 - index) + de)
+                    .css({zIndex: 52 - index})
+                    .animate({left, top}, 100);
+                // console.log(de);
+            }
+            de += 100;
+        }
+    }
+
+    dispath();
+
+    let box = $('#wrap');
+
+    let sym = [];
+    let number = [];
+    let location = [];
+    let tops = [];
+    let right = 1000;
+    box.on('click','.poke',function() {
+        let slef = $(this);
+        if (!slef.attr("id")) {
+            console.log(location);
+            if (location.length){
+                let index = Math.floor(Math.random()*location.length);
+                console.log(index);
+                slef.attr("id",location[index].id)
+                    .animate({
+                        zIndex:location[index].zIndex,
+                        top:location[index].top,
+                        left:location[index].left
+                    });
+                location.splice(index,1);
+            }else{
+                slef.animate({bottom:10,left:right});
+                right-=10;
+                slef.addClass("right").attr("id","8_8");
+            }
+            return;
+        }
+
+        let [i,j] = slef.attr("id").split("_");
+        let num = slef.attr('title');
+        let [id1,id2] = [i*1+1+"_"+j,i*1+1+"_"+(j*1+1)];
+
+        console.log(sym);
+        if (sym.includes(i+"_"+j)){
+            slef.animate({top:"+=30"});
+            sym = [];
+            number = [];
+            tops = [];
+            slef.removeClass("active");
+            return;
+        }
+        if ( $("#"+id1).length || $("#"+id2).length ){
+            return;
+        }
+        number.push(slef.data("num"));
+        sym.push(i+"_"+j);
+        tops.push(window.getComputedStyle(slef[0]).top.split("px")[0]*1);
+        // elem.push(slef);
+        slef.addClass("active");
+        slef.animate({
+            top:"-=30"
+        },"fast")
+
+        if (number.length === 2){
+            // console.log(number);
+            if (number[0]===number[1]) {
+                console.log($('.active'));
+                let [zIndex,top,left,id] = [window.getComputedStyle($('.active')[0]).zIndex,
+                    Math.max(tops[0],tops[1])+"px",
+                    window.getComputedStyle($(".active")[0]).left,
+                    $(".active").eq(0).attr("id")
+                ]
+                let obj1 = {zIndex,top,left,id};
+                console.log(obj1);
+                [zIndex,top,left,id] = [window.getComputedStyle($('.active')[1]).zIndex,
+                    Math.min(tops[0],tops[1])+"px",
+                    window.getComputedStyle($(".active")[1]).left,
+                    $(".active").eq(1).attr("id")
+                ]
+                let obj2 = {zIndex,top,left,id};
+                console.log(obj2);
+                location.push(obj1);
+                location.push(obj2);
+                $('.active').animate({top:0,left:1110},function () {
+                    $('.active').remove();
+                });
+
+            }else{
+                $('.active').animate({top:"+=30"});
+                $('.active').removeClass("active");
+                sym = [];
+                number = [];
+                tops = [];
+                return;
+            }
+            sym = [];
+            number = [];
+            tops = [];
+        }else{
+            return;
+        }
+
+    })
+
+
+
+})
