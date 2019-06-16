@@ -63,8 +63,34 @@ $(function () {
     let location = [];
     let tops = [];
     let right = 1000;
+	let flag1 = true;
+	let last = undefined;
     box.on('click','.poke',function() {
+		if(!flag1){return;}
+		flag1 = false;
         let slef = $(this);
+		if(last && slef.attr("id")=="9_9"){
+			last.animate({top:"+=30"},function(){
+				last = undefined;
+				flag1 = true;
+				sym = [];
+				number = [];
+				tops = [];
+				slef.removeClass("active");
+			});
+
+			return;
+			
+			
+		}else{
+			console.log(number.length);
+			if(slef.attr("id")=="9_9" && number.length === 0){
+				last = slef;
+			}else{
+				last = undefined;
+			}
+		}
+		
         if (!slef.attr("id")) {
             console.log(location);
             if (location.length){
@@ -75,10 +101,14 @@ $(function () {
                         zIndex:location[index].zIndex,
                         top:location[index].top,
                         left:location[index].left
-                    });
+                    },function(){
+						flag1 = true;
+						});
                 location.splice(index,1);
             }else{
-                slef.animate({bottom:10,left:right,zIndex:999});
+                slef.animate({bottom:10,left:right,zIndex:999},function(){
+					flag1 = true;
+				});
                 right-=20;
                 slef.addClass("right").attr("id","9_9");
             }
@@ -91,7 +121,9 @@ $(function () {
 
         console.log(sym);
         if (sym.includes(i+"_"+j) && i+"_"+j!=="9_9"){
-            slef.animate({top:"+=30"});
+            slef.animate({top:"+=30"},function(){
+				flag1 = true;
+			});
             sym = [];
             number = [];
             tops = [];
@@ -108,7 +140,9 @@ $(function () {
         slef.addClass("active");
         slef.animate({
             top:"-=30"
-        },"fast")
+        },"fast",function(){
+			flag1 = true;
+		})
 
         if (number.length === 2){
             // console.log(number);
