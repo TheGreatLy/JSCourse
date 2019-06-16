@@ -80,7 +80,7 @@ $(function () {
             }else{
                 slef.animate({bottom:10,left:right,zIndex:999});
                 right-=20;
-                slef.addClass("right").attr("id","9_9");
+                slef.addClass("right").attr("id","8_8");
             }
             return;
         }
@@ -90,7 +90,7 @@ $(function () {
         let [id1,id2] = [i*1+1+"_"+j,i*1+1+"_"+(j*1+1)];
 
         console.log(sym);
-        if (sym.includes(i+"_"+j) && i+"_"+j!=="9_9"){
+        if (sym.includes(i+"_"+j) && i+"_"+j!=="8_8"){
             slef.animate({top:"+=30"});
             sym = [];
             number = [];
@@ -128,9 +128,9 @@ $(function () {
                 ]
                 let obj2 = {zIndex,top,left,id};
                 console.log(obj2);
-				if(obj1.id!=="9_9"){
+				if(obj1.id!=="8_8"){
                 location.push(obj1);}
-				if(obj2.id!=="9_9"){
+				if(obj2.id!=="8_8"){
                 location.push(obj2);}
                 $('.active').animate({top:0,left:1110},function () {
                     $('.active').remove();
