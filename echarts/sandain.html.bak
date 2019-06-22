@@ -25,7 +25,7 @@
     <body>
         <div id="wrap"></div>
 
-        <script src="echarts.min.js"></script>
+        <script src="../cars/js/echarts.min.js"></script>
         <script src="data.js"></script>
         <script>
 
