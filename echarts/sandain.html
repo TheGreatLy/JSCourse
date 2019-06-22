@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <meta name="keywords" content="关键词">
+        <meta name="description" content="描述">
+        <meta name="author" content="LY">
+        <style>
+            body{font-family: "Microsoft YaHei",serif;}
+            body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+            ol,ul,li{margin:0;padding:0;list-style:none;}
+            img{border:none;}
+            html,body{
+                width:100%;
+                height:100%;
+            }
+            #wrap{
+                padding: 30px;
+                height:100%;
+                box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap"></div>
+
+        <script src="../cars/js/echarts.min.js"></script>
+        <script src="data.js"></script>
+        <script>
+
+
+            let wrap = document.getElementById('wrap');
+            let mycharts = echarts.init(wrap);
+
+
+            let lengend = [],
+                series = [],
+                selected = {};
+            for (let i = 0; i < categories.length;i++){
+                let kind = categories[i];
+                let movies = [];
+                if (kind === "全部"){
+                    selected[kind] = true;
+                    movies = data;
+                } else {
+                    selected[kind] = false;
+                    movies = data.filter(ele=>ele[4].includes(kind));
+                }
+
+                let obj = {
+                    name: kind,
+                    data: movies,
+                    type: 'scatter',
+                    symbolSize: function (data) {
+                        return data[2]/8;
+                    },
+                    label: {
+                        emphasis: {
+                            show: true,
+                            formatter: function (param) {
+                                return param.data[3];
+                            },
+                            position: 'top'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(120, 36, 50, 0.5)',
+                            shadowOffsetY: 5,
+                            color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                                offset: 0,
+                                color: randomColor()
+                            }, {
+                                offset: 1,
+                                color: randomColor()
+                            }])
+                        }
+                    }
+                }
+
+                series.push(obj);
+            }
+            function randomColor(){
+                let r = Math.random()*255,
+                    g = Math.random()*255,
+                    b = Math.random()*255;
+
+                return `rgb(${r},${g},${b})`;
+            }
+
+            let options = {
+                backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
+                    offset: 0,
+                    color: '#f7f8fa'
+                }, {
+                    offset: 1,
+                    color: '#cdd0d5'
+                }]),
+                title: {
+                    text: '豆瓣电影Top250数据分析',
+                    left: 'center',
+                    top: 10,
+                    textStyle: {
+                        color: '#000'
+                    }
+                },
+                xAxis: {
+                    name:'评论次数',
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
+                    scale: true
+                },
+                yAxis: {
+                    name:'评分',
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    },
+                    scale: true
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    x:'left',
+                    left:10,
+                    top: 20,
+                    bottom: 20,
+                    data: categories,
+                    selected:selected,
+                    selectedMode:'single'
+                },
+                // tooltip : {
+                //     trigger: 'item',
+                //     formatter: "{a} <br/>{b} : {c} ({d}%)"
+                // },
+                series
+            }
+
+
+            // console.log(arr);
+            mycharts.setOption(options);
+
+
+        </script>
+    </body>
+</html>

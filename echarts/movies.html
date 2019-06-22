@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <meta name="keywords" content="关键词">
+        <meta name="description" content="描述">
+        <meta name="author" content="LY">
+        <style>
+            body{font-family: "Microsoft YaHei",serif;}
+            body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+            ol,ul,li{margin:0;padding:0;list-style:none;}
+            img{border:none;}
+            html,body{
+                width:100%;
+                height:100%;
+            }
+            #wrap{
+                padding: 30px;
+                height:100%;
+                box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+
+        </div>
+
+        <script src="../cars/js/echarts.min.js"></script>
+        <script src="data.js"></script>
+        <script>
+
+            let wrap = document.getElementById('wrap');
+            let mycharts = echarts.init(wrap);
+
+
+            let arr = [],lengend = [],selected = {};
+            for (let i = 0; i < categories.length;i++){
+                if (i===0)continue;
+                let name = categories[i];
+                let value = data.filter(ele=>ele[4].includes(name)).length;
+                arr.push({
+                    value,name
+                })
+                lengend.push(name);
+                selected[name] = i<10;
+            }
+
+
+            let options = {
+                backgroundColor: '#2c343c',
+
+                title: {
+                    text: '豆瓣电影Top250分类',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    x:'left',
+                    left:50,
+                    top: 20,
+                    bottom: 20,
+                    data: lengend,
+
+                    selected:selected,
+                    textStyle: {
+                        color:"#fff"
+                    }
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                series:[
+                    {
+                        name:'电影分类',
+                        type:'pie',
+                        selectedMode: 'single',
+                        data:[]
+                    }
+                ]
+            }
+
+
+            console.log(arr);
+            options.series[0].data = arr;
+            mycharts.setOption(options);
+
+        </script>
+    </body>
+</html>
